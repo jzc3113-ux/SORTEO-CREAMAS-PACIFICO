@@ -59,10 +59,6 @@
                     </button>
                 </div>
                 <div id="fileError" class="text-red-500 text-sm mt-2 hidden"></div>
-                <div id="debugSection" class="mt-4 hidden">
-                    <h3 class="text-sm font-medium mb-2">Información del archivo</h3>
-                    <pre id="debugOutput" class="hidden bg-gray-100 p-2 rounded text-xs overflow-x-auto"></pre>
-                </div>
             </div>
 
             <div class="card p-6 mb-8" id="participantsSection" style="display: none;">
@@ -280,18 +276,6 @@
             };
             reader.readAsArrayBuffer(file);
             
-            // Show debug info
-            const debugSection = document.getElementById('debugSection');
-            const debugOutput = document.getElementById('debugOutput');
-            debugSection.classList.remove('hidden');
-            debugOutput.classList.remove('hidden');
-            const debugInfo = {
-                fileName: file.name,
-                fileSize: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
-                fileType: file.type,
-                lastModified: new Date(file.lastModified).toLocaleString()
-            };
-            debugOutput.textContent = JSON.stringify(debugInfo, null, 2);
         }
 
         // Evento para importar participantes

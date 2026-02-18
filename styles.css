@@ -26,7 +26,7 @@ h1,h2,h3,.heading{
 .brand-header{
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
 }
 
@@ -34,20 +34,28 @@ h1,h2,h3,.heading{
 .topbar img,
 .topbar svg,
 .brand-header .brand-logo{
-  height: 56px;
+  height: 40px;
   width: auto;
-  max-width: 180px;
+  max-width: 140px;
   object-fit: contain;
   display: block;
   flex: 0 0 auto;
 }
 
+.brand-header .brand-logo--crea{
+  max-width: 130px;
+}
+
+.brand-header .brand-logo--pacifico{
+  max-width: 120px;
+}
+
 .topbar .logo img,
 .topbar .logo svg,
 .brand-header .brand-logo svg{
-  height: 56px;
+  height: 40px;
   width: auto;
-  max-width: 180px;
+  max-width: 140px;
 }
 
 @media (max-width: 480px){
@@ -64,8 +72,13 @@ h1,h2,h3,.heading{
   .topbar .logo img,
   .topbar .logo svg,
   .brand-header .brand-logo svg{
-    height: 44px;
-    max-width: 160px;
+    height: 32px;
+    max-width: 120px;
+  }
+
+  .brand-header .brand-logo--crea,
+  .brand-header .brand-logo--pacifico{
+    max-width: 110px;
   }
 }
 

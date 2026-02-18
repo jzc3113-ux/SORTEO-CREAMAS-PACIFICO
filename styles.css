@@ -22,24 +22,45 @@ h1,h2,h3,.heading{
   color: var(--color-brand);
 }
 
+.topbar,
 .brand-header{
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
-.brand-logo{
-  height: clamp(48px, 8vw, 56px);
-  width: auto;
-  max-width: 100%;
+.topbar .logo,
+.topbar img,
+.topbar svg,
+.brand-header .brand-logo,
+.brand-header .brand-logo svg{
+  height: 48px !important;
+  max-height: 56px;
+  width: auto !important;
+  max-width: 180px;
   object-fit: contain;
+  display: block;
+  flex: 0 0 auto;
 }
 
-@media (max-width: 640px){
+@media (max-width: 480px){
+  .topbar,
   .brand-header{
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 12px;
+  }
+
+  .topbar .logo,
+  .topbar img,
+  .topbar svg,
+  .brand-header .brand-logo,
+  .brand-header .brand-logo svg{
+    height: 40px !important;
+    max-height: 44px;
+    max-width: 160px;
   }
 }
 

@@ -89,14 +89,6 @@
                 </div>
             </div>
 
-            <div id="winnerHeroSection" class="winner-hero-section mb-8" style="display: none;">
-                <div id="winnerDisplay" class="winner-highlight-card card p-6 text-center">
-                    <h3 class="winner-highlight-title">¡Tenemos ganador!</h3>
-                    <div id="winnerHeroName" class="winner-hero-name"></div>
-                    <p id="winnerCongrats" class="winner-congrats">¡Muchas felicidades!</p>
-                </div>
-            </div>
-
             <div class="card p-6" id="raffleSection" style="display: none;">
                 <h2 class="text-xl font-semibold mb-4">Seleccionar ganador</h2>
                 
@@ -152,13 +144,21 @@
     </div>
 
     <div id="countdownOverlay" class="countdown-overlay hidden" aria-hidden="true">
-        <button id="closeOverlayBtn" class="overlay-close-btn hidden" type="button" aria-label="Cerrar overlay de ganador">×</button>
         <div id="countdownNumber" class="countdown-number">10</div>
         <div id="overlayNumberTicker" class="overlay-number-ticker hidden" aria-live="polite"></div>
         <div id="overlayWinnerContent" class="overlay-winner-content hidden">
             <p class="overlay-winner-label">El ganador es</p>
             <div id="overlayWinnerNumber" class="overlay-winner-number"></div>
             <button id="overlayNewDrawBtn" class="btn-primary overlay-new-draw-btn" type="button">Ver ganador</button>
+        </div>
+    </div>
+
+    <div id="winnerRevealOverlay" class="winner-reveal-overlay hidden" aria-hidden="true">
+        <div class="winner-reveal-content">
+            <p class="winner-reveal-title">¡Tenemos ganador!</p>
+            <div id="winnerRevealName" class="winner-reveal-name"></div>
+            <p class="winner-reveal-subtitle">¡Muchas felicidades!</p>
+            <button id="winnerRevealNewDrawBtn" class="btn-primary overlay-new-draw-btn" type="button">Nuevo sorteo</button>
         </div>
     </div>
 
@@ -183,7 +183,6 @@
         const winnerContainer = document.getElementById('winnerContainer');
         const winnerList = document.getElementById('winnerList');
         const displayPrize = document.getElementById('displayPrize');
-        const winnerHeroSection = document.getElementById('winnerHeroSection');
         const newDrawBtn = document.getElementById('newDrawBtn');
         const prizeNameInput = document.getElementById('prizeName');
         const winnerCountSelect = document.getElementById('winnerCount');
@@ -192,10 +191,10 @@
         const overlayNumberTicker = document.getElementById('overlayNumberTicker');
         const overlayWinnerContent = document.getElementById('overlayWinnerContent');
         const overlayWinnerNumber = document.getElementById('overlayWinnerNumber');
-        const winnerHeroName = document.getElementById('winnerHeroName');
-        const winnerCongrats = document.getElementById('winnerCongrats');
-        const closeOverlayBtn = document.getElementById('closeOverlayBtn');
         const overlayNewDrawBtn = document.getElementById('overlayNewDrawBtn');
+        const winnerRevealOverlay = document.getElementById('winnerRevealOverlay');
+        const winnerRevealName = document.getElementById('winnerRevealName');
+        const winnerRevealNewDrawBtn = document.getElementById('winnerRevealNewDrawBtn');
         const importSuccessMessage = document.getElementById('importSuccessMessage');
 
         let isCountdownRunning = false;
@@ -473,9 +472,10 @@
             drawBtn.disabled = true;
             winnerContainer.style.display = 'none';
             countdownNumber.classList.remove('hidden');
-            closeOverlayBtn.classList.add('hidden');
             overlayWinnerContent.classList.add('hidden');
             overlayWinnerNumber.textContent = '';
+            winnerRevealOverlay.classList.add('hidden');
+            winnerRevealOverlay.setAttribute('aria-hidden', 'true');
             startOverlayTicker();
             countdownOverlay.classList.remove('hidden');
             countdownOverlay.setAttribute('aria-hidden', 'false');
@@ -531,9 +531,7 @@
 
             // Mostrar ganadores en la tarjeta inferior
             const heroWinner = winners[0];
-            winnerHeroName.textContent = heroWinner ? heroWinner.name : '';
-            winnerHeroSection.style.display = heroWinner ? 'block' : 'none';
-            winnerCongrats.style.display = heroWinner ? 'block' : 'none';
+            winnerRevealName.textContent = heroWinner ? heroWinner.name : '';
 
             winners.forEach((winner, index) => {
                 const winnerElement = document.createElement('div');
@@ -552,37 +550,45 @@
             countdownNumber.classList.add('hidden');
             overlayWinnerNumber.textContent = winnerNumber ? `N.° ${winnerNumber}` : '';
             stopOverlayTicker(winnerNumber);
-            closeOverlayBtn.classList.remove('hidden');
             overlayWinnerContent.classList.remove('hidden');
 
             drawBtn.disabled = false;
             isCountdownRunning = false;
         }
 
-        function closeOverlay(focusWinnerSection = false) {
+        function closeOverlay() {
             countdownOverlay.classList.add('hidden');
             countdownOverlay.setAttribute('aria-hidden', 'true');
             countdownNumber.classList.remove('hidden');
-            closeOverlayBtn.classList.add('hidden');
             overlayWinnerContent.classList.add('hidden');
             overlayNumberTicker.classList.add('hidden');
             overlayWinnerNumber.textContent = '';
             stopOverlayTicker();
             drawBtn.disabled = false;
             isCountdownRunning = false;
-
-            if (focusWinnerSection && winnerHeroSection.style.display !== 'none') {
-                winnerHeroSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
         }
 
-        closeOverlayBtn.addEventListener('click', () => closeOverlay(false));
-        overlayNewDrawBtn.addEventListener('click', () => closeOverlay(true));
+        function closeWinnerRevealOverlay() {
+            winnerRevealOverlay.classList.add('hidden');
+            winnerRevealOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        overlayNewDrawBtn.addEventListener('click', () => {
+            closeOverlay();
+            winnerRevealOverlay.classList.remove('hidden');
+            winnerRevealOverlay.setAttribute('aria-hidden', 'false');
+        });
+
+        winnerRevealNewDrawBtn.addEventListener('click', () => {
+            closeWinnerRevealOverlay();
+            winnerContainer.style.display = 'none';
+            prizeNameInput.focus();
+        });
 
         // Evento para nuevo sorteo
         newDrawBtn.addEventListener('click', () => {
             winnerContainer.style.display = 'none';
-            winnerHeroSection.style.display = 'none';
+            closeWinnerRevealOverlay();
             prizeNameInput.focus();
         });
     </script>

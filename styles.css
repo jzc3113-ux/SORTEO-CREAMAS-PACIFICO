@@ -166,22 +166,6 @@ h1,h2,h3,.heading{
 }
 
 
-.winner-highlight-card{
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.winner-hero-section{
-  width: 100%;
-}
-
-.winner-highlight-title{
-  font-family: 'Atkinson Hyperlegible', sans-serif;
-  font-size: clamp(1.2rem, 2.8vw, 1.6rem);
-  color: #0C00C0;
-  margin: 0 0 .6rem;
-}
-
 @keyframes winnerNameBreath{
   0%{
     transform: scale(1);
@@ -198,23 +182,6 @@ h1,h2,h3,.heading{
   font-family: 'FF Nort Headline', 'Atkinson Hyperlegible', sans-serif;
 }
 
-.winner-hero-name{
-  font-family: 'FF Nort Headline', 'Atkinson Hyperlegible', sans-serif;
-  font-size: clamp(2.4rem, 6vw, 4.8rem);
-  line-height: 1.05;
-  color: #0C00C0;
-  margin-bottom: .35rem;
-  display: inline-block;
-  transform-origin: center;
-  animation: winnerNameBreath 2.4s ease-in-out infinite;
-}
-
-.winner-congrats{
-  font-family: 'Atkinson Hyperlegible', sans-serif;
-  font-size: 1rem;
-  color: #4b5563;
-  margin: 0 0 1rem;
-}
 
 .overlay-winner-label{
   font-family: 'Atkinson Hyperlegible', sans-serif;
@@ -248,34 +215,6 @@ h1,h2,h3,.heading{
   display: none;
 }
 
-.overlay-close-btn{
-  position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  background: rgba(0, 0, 0, 0.35);
-  color: #fff;
-  font-family: 'Atkinson Hyperlegible', sans-serif;
-  font-size: 2rem;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.overlay-close-btn:hover{
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
-}
-
-.overlay-close-btn.hidden{
-  display: none;
-}
 
 .overlay-winner-content{
   display: flex;
@@ -293,4 +232,60 @@ h1,h2,h3,.heading{
   font-family: 'Atkinson Hyperlegible', sans-serif;
   min-width: 11rem;
   text-align: center;
+}
+
+
+.winner-reveal-overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: radial-gradient(circle at top, rgba(45,66,255,0.35), rgba(0,0,0,0.96) 55%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.winner-reveal-overlay.hidden{
+  display: none;
+}
+
+.winner-reveal-content{
+  width: min(1200px, 100%);
+  min-height: min(76vh, 900px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+
+.winner-reveal-title,
+.winner-reveal-subtitle{
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  color: #fff;
+  margin: 0;
+}
+
+.winner-reveal-title{
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+}
+
+.winner-reveal-name{
+  font-family: 'FF Nort Headline', 'Atkinson Hyperlegible', sans-serif;
+  font-size: clamp(3.2rem, 11vw, 11rem);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  color: #fff;
+  margin: 0.3rem 0;
+  display: inline-block;
+  transform-origin: center;
+  animation: winnerNameBreath 2.6s ease-in-out infinite;
+  text-wrap: balance;
+}
+
+.winner-reveal-subtitle{
+  font-size: clamp(1.05rem, 2.6vw, 1.8rem);
+  color: rgba(255,255,255,0.92);
 }

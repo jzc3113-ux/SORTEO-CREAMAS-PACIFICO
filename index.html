@@ -143,8 +143,12 @@
     </div>
 
     <div id="countdownOverlay" class="countdown-overlay hidden" aria-hidden="true">
+        <button id="closeOverlayBtn" class="overlay-close-btn hidden" type="button" aria-label="Cerrar overlay de ganador">×</button>
         <div id="countdownNumber" class="countdown-number">10</div>
-        <div id="overlayWinnerName" class="overlay-winner-name hidden"></div>
+        <div id="overlayWinnerContent" class="overlay-winner-content hidden">
+            <div id="overlayWinnerName" class="overlay-winner-name"></div>
+            <button id="overlayNewDrawBtn" class="btn-primary overlay-new-draw-btn" type="button">Nuevo sorteo</button>
+        </div>
     </div>
 
     <script>
@@ -173,7 +177,10 @@
         const winnerCountSelect = document.getElementById('winnerCount');
         const countdownOverlay = document.getElementById('countdownOverlay');
         const countdownNumber = document.getElementById('countdownNumber');
+        const overlayWinnerContent = document.getElementById('overlayWinnerContent');
         const overlayWinnerName = document.getElementById('overlayWinnerName');
+        const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+        const overlayNewDrawBtn = document.getElementById('overlayNewDrawBtn');
 
         let isCountdownRunning = false;
 
@@ -403,7 +410,8 @@
             drawBtn.disabled = true;
             winnerContainer.style.display = 'none';
             countdownNumber.classList.remove('hidden');
-            overlayWinnerName.classList.add('hidden');
+            closeOverlayBtn.classList.add('hidden');
+            overlayWinnerContent.classList.add('hidden');
             overlayWinnerName.textContent = '';
             countdownOverlay.classList.remove('hidden');
             countdownOverlay.setAttribute('aria-hidden', 'false');
@@ -471,11 +479,26 @@
 
             countdownNumber.classList.add('hidden');
             overlayWinnerName.textContent = winners.map((winner) => winner.name).join(' • ');
-            overlayWinnerName.classList.remove('hidden');
+            closeOverlayBtn.classList.remove('hidden');
+            overlayWinnerContent.classList.remove('hidden');
 
             drawBtn.disabled = false;
             isCountdownRunning = false;
         }
+
+        function closeOverlay() {
+            countdownOverlay.classList.add('hidden');
+            countdownOverlay.setAttribute('aria-hidden', 'true');
+            countdownNumber.classList.remove('hidden');
+            closeOverlayBtn.classList.add('hidden');
+            overlayWinnerContent.classList.add('hidden');
+            overlayWinnerName.textContent = '';
+            drawBtn.disabled = false;
+            isCountdownRunning = false;
+        }
+
+        closeOverlayBtn.addEventListener('click', closeOverlay);
+        overlayNewDrawBtn.addEventListener('click', closeOverlay);
 
         // Evento para nuevo sorteo
         newDrawBtn.addEventListener('click', () => {

@@ -163,3 +163,51 @@ h1,h2,h3,.heading{
 .overlay-winner-name.hidden{
   display: none;
 }
+
+
+.overlay-close-btn{
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.overlay-close-btn:hover{
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.overlay-close-btn.hidden{
+  display: none;
+}
+
+.overlay-winner-content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.overlay-winner-content.hidden{
+  display: none;
+}
+
+.overlay-new-draw-btn{
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  min-width: 11rem;
+  text-align: center;
+}

@@ -89,6 +89,14 @@
                 </div>
             </div>
 
+            <div id="winnerHeroSection" class="winner-hero-section mb-8" style="display: none;">
+                <div id="winnerDisplay" class="winner-highlight-card card p-6 text-center">
+                    <h3 class="winner-highlight-title">¡Tenemos ganador!</h3>
+                    <div id="winnerHeroName" class="winner-hero-name"></div>
+                    <p id="winnerCongrats" class="winner-congrats">¡Muchas felicidades!</p>
+                </div>
+            </div>
+
             <div class="card p-6" id="raffleSection" style="display: none;">
                 <h2 class="text-xl font-semibold mb-4">Seleccionar ganador</h2>
                 
@@ -121,12 +129,6 @@
                         <p id="displayPrize" class="text-gray-600"></p>
                     </div>
 
-                    <div id="winnerDisplay" class="winner-highlight-card card p-6 text-center">
-                        <h3 class="winner-highlight-title">¡Tenemos ganador!</h3>
-                        <div id="winnerHeroName" class="winner-hero-name"></div>
-                        <p id="winnerCongrats" class="winner-congrats">¡Muchas felicidades!</p>
-                    </div>
-
                     <div class="card p-6 text-center">
                         <h3 class="text-lg font-semibold mb-4">¡Ganador(es)!</h3>
                         <div id="winnerList" class="space-y-2 text-gray-700">
@@ -156,7 +158,7 @@
         <div id="overlayWinnerContent" class="overlay-winner-content hidden">
             <p class="overlay-winner-label">El ganador es</p>
             <div id="overlayWinnerNumber" class="overlay-winner-number"></div>
-            <button id="overlayNewDrawBtn" class="btn-primary overlay-new-draw-btn" type="button">Nuevo sorteo</button>
+            <button id="overlayNewDrawBtn" class="btn-primary overlay-new-draw-btn" type="button">Ver ganador</button>
         </div>
     </div>
 
@@ -181,6 +183,7 @@
         const winnerContainer = document.getElementById('winnerContainer');
         const winnerList = document.getElementById('winnerList');
         const displayPrize = document.getElementById('displayPrize');
+        const winnerHeroSection = document.getElementById('winnerHeroSection');
         const newDrawBtn = document.getElementById('newDrawBtn');
         const prizeNameInput = document.getElementById('prizeName');
         const winnerCountSelect = document.getElementById('winnerCount');
@@ -529,11 +532,7 @@
             // Mostrar ganadores en la tarjeta inferior
             const heroWinner = winners[0];
             winnerHeroName.textContent = heroWinner ? heroWinner.name : '';
-            winnerHeroName.classList.remove('winner-hero-name-animate');
-            if (heroWinner) {
-                void winnerHeroName.offsetWidth;
-                winnerHeroName.classList.add('winner-hero-name-animate');
-            }
+            winnerHeroSection.style.display = heroWinner ? 'block' : 'none';
             winnerCongrats.style.display = heroWinner ? 'block' : 'none';
 
             winners.forEach((winner, index) => {
@@ -560,7 +559,7 @@
             isCountdownRunning = false;
         }
 
-        function closeOverlay() {
+        function closeOverlay(focusWinnerSection = false) {
             countdownOverlay.classList.add('hidden');
             countdownOverlay.setAttribute('aria-hidden', 'true');
             countdownNumber.classList.remove('hidden');
@@ -571,14 +570,19 @@
             stopOverlayTicker();
             drawBtn.disabled = false;
             isCountdownRunning = false;
+
+            if (focusWinnerSection && winnerHeroSection.style.display !== 'none') {
+                winnerHeroSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
 
-        closeOverlayBtn.addEventListener('click', closeOverlay);
-        overlayNewDrawBtn.addEventListener('click', closeOverlay);
+        closeOverlayBtn.addEventListener('click', () => closeOverlay(false));
+        overlayNewDrawBtn.addEventListener('click', () => closeOverlay(true));
 
         // Evento para nuevo sorteo
         newDrawBtn.addEventListener('click', () => {
             winnerContainer.style.display = 'none';
+            winnerHeroSection.style.display = 'none';
             prizeNameInput.focus();
         });
     </script>

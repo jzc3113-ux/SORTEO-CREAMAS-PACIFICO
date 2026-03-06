@@ -171,6 +171,10 @@ h1,h2,h3,.heading{
   margin: 0 auto;
 }
 
+.winner-hero-section{
+  width: 100%;
+}
+
 .winner-highlight-title{
   font-family: 'Atkinson Hyperlegible', sans-serif;
   font-size: clamp(1.2rem, 2.8vw, 1.6rem);
@@ -178,22 +182,15 @@ h1,h2,h3,.heading{
   margin: 0 0 .6rem;
 }
 
-.winner-hero-name-animate{
-  animation: winnerNameReveal 950ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@keyframes winnerNameReveal{
+@keyframes winnerNameBreath{
   0%{
-    transform: scale(0.9);
-    opacity: 0.75;
+    transform: scale(1);
   }
-  60%{
-    transform: scale(1.08);
-    opacity: 1;
+  50%{
+    transform: scale(1.05);
   }
   100%{
     transform: scale(1);
-    opacity: 1;
   }
 }
 
@@ -207,6 +204,9 @@ h1,h2,h3,.heading{
   line-height: 1.05;
   color: #0C00C0;
   margin-bottom: .35rem;
+  display: inline-block;
+  transform-origin: center;
+  animation: winnerNameBreath 2.4s ease-in-out infinite;
 }
 
 .winner-congrats{

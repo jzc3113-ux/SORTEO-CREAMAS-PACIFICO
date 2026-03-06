@@ -144,6 +144,7 @@
 
     <div id="countdownOverlay" class="countdown-overlay hidden" aria-hidden="true">
         <div id="countdownNumber" class="countdown-number">10</div>
+        <div id="overlayWinnerName" class="overlay-winner-name hidden"></div>
     </div>
 
     <script>
@@ -172,6 +173,7 @@
         const winnerCountSelect = document.getElementById('winnerCount');
         const countdownOverlay = document.getElementById('countdownOverlay');
         const countdownNumber = document.getElementById('countdownNumber');
+        const overlayWinnerName = document.getElementById('overlayWinnerName');
 
         let isCountdownRunning = false;
 
@@ -379,7 +381,30 @@
         function startCountdownBeforeDraw() {
             if (isCountdownRunning) return;
 
+            const prize = prizeNameInput.value.trim();
+            const winnerCount = parseInt(winnerCountSelect.value);
+
+            if (!prize) {
+                alert('Por favor ingresa el nombre del premio');
+                return;
+            }
+
+            if (participants.length === 0) {
+                alert('No hay participantes cargados');
+                return;
+            }
+
+            if (winnerCount > participants.length) {
+                alert(`No hay suficientes participantes (${participants.length}) para seleccionar ${winnerCount} ganadores`);
+                return;
+            }
+
             isCountdownRunning = true;
+            drawBtn.disabled = true;
+            winnerContainer.style.display = 'none';
+            countdownNumber.classList.remove('hidden');
+            overlayWinnerName.classList.add('hidden');
+            overlayWinnerName.textContent = '';
             countdownOverlay.classList.remove('hidden');
             countdownOverlay.setAttribute('aria-hidden', 'false');
 
@@ -395,11 +420,7 @@
                 }
 
                 clearInterval(countdownInterval);
-                countdownOverlay.classList.add('hidden');
-                countdownOverlay.setAttribute('aria-hidden', 'true');
-                isCountdownRunning = false;
                 selectWinner();
-
             }, 1000);
         }
 
@@ -422,55 +443,38 @@
                 return;
             }
 
-            drawBtn.disabled = true;
             displayPrize.textContent = prize;
             winnerContainer.style.display = 'block';
             winnerList.innerHTML = '';
 
-            const rouletteElement = document.createElement('div');
-            rouletteElement.className = 'text-lg font-semibold';
-            winnerList.appendChild(rouletteElement);
+            // Seleccionar ganadores aleatorios sin repetición
+            winners = [];
+            const participantsCopy = [...participants];
 
-            const rouletteDuration = 10000;
-            const rouletteSpeed = 80;
+            for (let i = 0; i < winnerCount; i++) {
+                const randomIndex = Math.floor(Math.random() * participantsCopy.length);
+                winners.push(participantsCopy[randomIndex]);
+                participantsCopy.splice(randomIndex, 1);
+            }
 
-            const rouletteInterval = setInterval(() => {
-                const randomIndex = Math.floor(Math.random() * participants.length);
-                rouletteElement.innerHTML = `🎯 ${participants[randomIndex].name}`;
-            }, rouletteSpeed);
-
-            setTimeout(() => {
-                clearInterval(rouletteInterval);
-
-                // Seleccionar ganadores aleatorios sin repetición
-                winners = [];
-                const participantsCopy = [...participants];
-                
-                for (let i = 0; i < winnerCount; i++) {
-                    const randomIndex = Math.floor(Math.random() * participantsCopy.length);
-                    winners.push(participantsCopy[randomIndex]);
-                    participantsCopy.splice(randomIndex, 1);
+            // Mostrar ganadores en la tarjeta inferior
+            winners.forEach((winner, index) => {
+                const winnerElement = document.createElement('div');
+                winnerElement.className = 'text-lg winner-name';
+                if (winner.email) {
+                    winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name} &lt;${winner.email}&gt;`;
+                } else {
+                    winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name}`;
                 }
-                
-                // Mostrar ganadores
-                winnerList.innerHTML = '';
-                
-                winners.forEach((winner, index) => {
-                    const winnerElement = document.createElement('div');
-                    winnerElement.className = 'text-lg winner-name';
-                    if (winner.email) {
-                        winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name} &lt;${winner.email}&gt;`;
-                    } else {
-                        winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name}`;
-                    }
-                    winnerList.appendChild(winnerElement);
-                });
+                winnerList.appendChild(winnerElement);
+            });
 
-                drawBtn.disabled = false;
-                
-                // Desplazarse hasta los ganadores
-                winnerContainer.scrollIntoView({ behavior: 'smooth' });
-            }, rouletteDuration);
+            countdownNumber.classList.add('hidden');
+            overlayWinnerName.textContent = winners.map((winner) => winner.name).join(' • ');
+            overlayWinnerName.classList.remove('hidden');
+
+            drawBtn.disabled = false;
+            isCountdownRunning = false;
         }
 
         // Evento para nuevo sorteo

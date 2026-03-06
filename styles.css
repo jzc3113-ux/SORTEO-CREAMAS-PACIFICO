@@ -146,3 +146,20 @@ h1,h2,h3,.heading{
 .winner-name{
   font-family: 'FF Nort Headline', 'Atkinson Hyperlegible', sans-serif;
 }
+
+
+.overlay-winner-name{
+  font-family: 'FF Nort Headline', 'Atkinson Hyperlegible', sans-serif;
+  font-size: clamp(2.5rem, 9vw, 7rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  text-align: center;
+  max-width: min(92vw, 1200px);
+  word-break: break-word;
+  padding: 0 1rem;
+}
+
+.overlay-winner-name.hidden{
+  display: none;
+}

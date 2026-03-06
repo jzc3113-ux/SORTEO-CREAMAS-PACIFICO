@@ -157,6 +157,10 @@
         <div class="winner-reveal-content">
             <p class="winner-reveal-title">¡Tenemos ganador!</p>
             <div id="winnerRevealName" class="winner-reveal-name"></div>
+            <div class="winner-reveal-prize">
+                <p class="winner-reveal-prize-label">Premio</p>
+                <p id="winnerRevealPrize" class="winner-reveal-prize-value"></p>
+            </div>
             <p class="winner-reveal-subtitle">¡Muchas felicidades!</p>
             <button id="winnerRevealNewDrawBtn" class="btn-primary overlay-new-draw-btn" type="button">Nuevo sorteo</button>
         </div>
@@ -194,6 +198,7 @@
         const overlayNewDrawBtn = document.getElementById('overlayNewDrawBtn');
         const winnerRevealOverlay = document.getElementById('winnerRevealOverlay');
         const winnerRevealName = document.getElementById('winnerRevealName');
+        const winnerRevealPrize = document.getElementById('winnerRevealPrize');
         const winnerRevealNewDrawBtn = document.getElementById('winnerRevealNewDrawBtn');
         const importSuccessMessage = document.getElementById('importSuccessMessage');
 
@@ -532,6 +537,7 @@
             // Mostrar ganadores en la tarjeta inferior
             const heroWinner = winners[0];
             winnerRevealName.textContent = heroWinner ? heroWinner.name : '';
+            winnerRevealPrize.textContent = prize;
 
             winners.forEach((winner, index) => {
                 const winnerElement = document.createElement('div');

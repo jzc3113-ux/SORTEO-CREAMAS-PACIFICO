@@ -121,10 +121,14 @@
                         <p id="displayPrize" class="text-gray-600"></p>
                     </div>
 
-                    <div id="winnerDisplay" class="winner-animation card p-6 text-center">
-                        <h3 class="text-lg font-semibold mb-4">¡Ganador(es)!</h3>
+                    <div id="winnerDisplay" class="winner-highlight-card card p-6 text-center">
+                        <h3 class="winner-highlight-title">¡Tenemos ganador!</h3>
                         <div id="winnerHeroName" class="winner-hero-name"></div>
                         <p id="winnerCongrats" class="winner-congrats">¡Muchas felicidades!</p>
+                    </div>
+
+                    <div class="card p-6 text-center">
+                        <h3 class="text-lg font-semibold mb-4">¡Ganador(es)!</h3>
                         <div id="winnerList" class="space-y-2 text-gray-700">
                             <!-- Aquí se mostrarán los ganadores -->
                         </div>
@@ -152,7 +156,6 @@
         <div id="overlayWinnerContent" class="overlay-winner-content hidden">
             <p class="overlay-winner-label">El ganador es</p>
             <div id="overlayWinnerNumber" class="overlay-winner-number"></div>
-            <div id="overlayWinnerName" class="overlay-winner-name"></div>
             <button id="overlayNewDrawBtn" class="btn-primary overlay-new-draw-btn" type="button">Nuevo sorteo</button>
         </div>
     </div>
@@ -186,7 +189,6 @@
         const overlayNumberTicker = document.getElementById('overlayNumberTicker');
         const overlayWinnerContent = document.getElementById('overlayWinnerContent');
         const overlayWinnerNumber = document.getElementById('overlayWinnerNumber');
-        const overlayWinnerName = document.getElementById('overlayWinnerName');
         const winnerHeroName = document.getElementById('winnerHeroName');
         const winnerCongrats = document.getElementById('winnerCongrats');
         const closeOverlayBtn = document.getElementById('closeOverlayBtn');
@@ -471,7 +473,6 @@
             closeOverlayBtn.classList.add('hidden');
             overlayWinnerContent.classList.add('hidden');
             overlayWinnerNumber.textContent = '';
-            overlayWinnerName.textContent = '';
             startOverlayTicker();
             countdownOverlay.classList.remove('hidden');
             countdownOverlay.setAttribute('aria-hidden', 'false');
@@ -528,13 +529,18 @@
             // Mostrar ganadores en la tarjeta inferior
             const heroWinner = winners[0];
             winnerHeroName.textContent = heroWinner ? heroWinner.name : '';
+            winnerHeroName.classList.remove('winner-hero-name-animate');
+            if (heroWinner) {
+                void winnerHeroName.offsetWidth;
+                winnerHeroName.classList.add('winner-hero-name-animate');
+            }
             winnerCongrats.style.display = heroWinner ? 'block' : 'none';
 
             winners.forEach((winner, index) => {
                 const winnerElement = document.createElement('div');
                 winnerElement.className = 'text-lg winner-name';
                 if (winner.email) {
-                    winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name} &lt;${winner.email}&gt;`;
+                    winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name} - ${winner.email}`;
                 } else {
                     winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name}`;
                 }
@@ -546,7 +552,6 @@
 
             countdownNumber.classList.add('hidden');
             overlayWinnerNumber.textContent = winnerNumber ? `N.° ${winnerNumber}` : '';
-            overlayWinnerName.textContent = heroWinner ? heroWinner.name : '';
             stopOverlayTicker(winnerNumber);
             closeOverlayBtn.classList.remove('hidden');
             overlayWinnerContent.classList.remove('hidden');
@@ -563,7 +568,6 @@
             overlayWinnerContent.classList.add('hidden');
             overlayNumberTicker.classList.add('hidden');
             overlayWinnerNumber.textContent = '';
-            overlayWinnerName.textContent = '';
             stopOverlayTicker();
             drawBtn.disabled = false;
             isCountdownRunning = false;

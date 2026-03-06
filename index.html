@@ -182,6 +182,7 @@
         const participantsSection = document.getElementById('participantsSection');
         const raffleSection = document.getElementById('raffleSection');
         const participantsTable = document.getElementById('participantsTable');
+        const participantsTableWrapper = document.getElementById('participantsTableWrapper');
         const participantCount = document.getElementById('participantCount');
         const drawBtn = document.getElementById('drawBtn');
         const winnerContainer = document.getElementById('winnerContainer');
@@ -201,6 +202,7 @@
         const winnerRevealPrize = document.getElementById('winnerRevealPrize');
         const winnerRevealNewDrawBtn = document.getElementById('winnerRevealNewDrawBtn');
         const importSuccessMessage = document.getElementById('importSuccessMessage');
+        const defaultDropAreaText = 'Sube tu lista de participantes en formato Excel';
 
         let isCountdownRunning = false;
         let importMessageTimeout = null;
@@ -562,6 +564,71 @@
             isCountdownRunning = false;
         }
 
+
+        function resetRaffleApp() {
+            participants = [];
+            winners = [];
+            workbook = null;
+            selectedFileName = '';
+            isCountdownRunning = false;
+
+            if (importMessageTimeout) {
+                clearTimeout(importMessageTimeout);
+                importMessageTimeout = null;
+            }
+
+            stopOverlayTicker();
+
+            // Limpiar input y área de carga
+            fileInput.value = '';
+            const dropText = dropArea.querySelector('p:first-of-type');
+            dropText.textContent = defaultDropAreaText;
+            dropArea.classList.remove('bg-blue-50', 'active');
+
+            // Limpiar errores y mensajes
+            const fileError = document.getElementById('fileError');
+            fileError.textContent = '';
+            fileError.classList.add('hidden');
+            importSuccessMessage.innerHTML = '';
+            importSuccessMessage.classList.add('hidden');
+
+            // Restablecer importación
+            importBtn.disabled = true;
+            importBtn.innerHTML = 'Importar participantes';
+            nameColumnSelect.innerHTML = '<option value="">Selecciona columna...</option>';
+            emailColumnSelect.innerHTML = '<option value="">Selecciona columna...</option>';
+
+            // Limpiar participantes y resultados
+            participantsTable.innerHTML = '';
+            participantCount.textContent = '0';
+            participantsSection.style.display = 'none';
+            participantsTableWrapper.classList.add('participants-table-hidden');
+            raffleSection.style.display = 'none';
+            winnerContainer.style.display = 'none';
+            winnerList.innerHTML = '';
+            displayPrize.textContent = '';
+
+            // Limpiar campos del formulario
+            prizeNameInput.value = '';
+            winnerCountSelect.value = '1';
+
+            // Limpiar overlays
+            countdownOverlay.classList.add('hidden');
+            countdownOverlay.setAttribute('aria-hidden', 'true');
+            countdownNumber.classList.remove('hidden');
+            countdownNumber.textContent = '10';
+            overlayNumberTicker.classList.add('hidden');
+            overlayNumberTicker.textContent = '';
+            overlayWinnerContent.classList.add('hidden');
+            overlayWinnerNumber.textContent = '';
+            closeWinnerRevealOverlay();
+            winnerRevealName.textContent = '';
+            winnerRevealPrize.textContent = '';
+
+            drawBtn.disabled = false;
+            fileInput.focus();
+        }
+
         function closeOverlay() {
             countdownOverlay.classList.add('hidden');
             countdownOverlay.setAttribute('aria-hidden', 'true');
@@ -586,16 +653,14 @@
         });
 
         winnerRevealNewDrawBtn.addEventListener('click', () => {
-            closeWinnerRevealOverlay();
-            winnerContainer.style.display = 'none';
-            prizeNameInput.focus();
+            closeOverlay();
+            resetRaffleApp();
         });
 
         // Evento para nuevo sorteo
         newDrawBtn.addEventListener('click', () => {
-            winnerContainer.style.display = 'none';
-            closeWinnerRevealOverlay();
-            prizeNameInput.focus();
+            closeOverlay();
+            resetRaffleApp();
         });
     </script>
 </body>

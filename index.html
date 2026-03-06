@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 
-                <div class="overflow-x-auto">
+                <div id="participantsTableWrapper" class="overflow-x-auto participants-table-hidden">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
@@ -190,15 +190,14 @@
         function showImportSuccessMessage(count) {
             if (importMessageTimeout) {
                 clearTimeout(importMessageTimeout);
+                importMessageTimeout = null;
             }
 
-            importSuccessMessage.textContent = `Se importaron ${count} participantes correctamente`;
+            importSuccessMessage.innerHTML = `
+                <p class="import-success-title">¡Listo! Se cargaron ${count} participantes para el sorteo.</p>
+                <p class="import-success-subtitle">Todo está preparado para elegir al ganador.</p>
+            `;
             importSuccessMessage.classList.remove('hidden');
-
-            importMessageTimeout = setTimeout(() => {
-                importSuccessMessage.classList.add('hidden');
-                importMessageTimeout = null;
-            }, 4000);
         }
 
         // Eventos para el área de arrastrar y soltar
@@ -362,7 +361,6 @@
             displayParticipants();
             
             // Mostrar secciones relevantes
-            participantsSection.style.display = 'block';
             raffleSection.style.display = 'block';
             
             // Actualizar contador

@@ -111,6 +111,21 @@ h1,h2,h3,.heading{
   background-color: rgba(49,130,206,0.2);
 }
 
+.import-success-message{
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background-color: #dcfce7;
+  border: 1px solid #86efac;
+  color: #166534;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.import-success-message.hidden{
+  display: none;
+}
+
 .winner-animation{
   animation: pulse 2s infinite;
 }

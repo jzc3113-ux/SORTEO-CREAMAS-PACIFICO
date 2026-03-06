@@ -142,6 +142,10 @@
         </footer>
     </div>
 
+    <div id="countdownOverlay" class="countdown-overlay hidden" aria-hidden="true">
+        <div id="countdownNumber" class="countdown-number">10</div>
+    </div>
+
     <script>
         // Variables globales
         let participants = [];
@@ -166,6 +170,10 @@
         const newDrawBtn = document.getElementById('newDrawBtn');
         const prizeNameInput = document.getElementById('prizeName');
         const winnerCountSelect = document.getElementById('winnerCount');
+        const countdownOverlay = document.getElementById('countdownOverlay');
+        const countdownNumber = document.getElementById('countdownNumber');
+
+        let isCountdownRunning = false;
 
         // Eventos para el área de arrastrar y soltar
         dropArea.addEventListener('click', () => fileInput.click());
@@ -366,7 +374,34 @@
         }
 
         // Evento para seleccionar ganador
-        drawBtn.addEventListener('click', selectWinner);
+        drawBtn.addEventListener('click', startCountdownBeforeDraw);
+
+        function startCountdownBeforeDraw() {
+            if (isCountdownRunning) return;
+
+            isCountdownRunning = true;
+            countdownOverlay.classList.remove('hidden');
+            countdownOverlay.setAttribute('aria-hidden', 'false');
+
+            let currentCount = 10;
+            countdownNumber.textContent = currentCount;
+
+            const countdownInterval = setInterval(() => {
+                currentCount -= 1;
+
+                if (currentCount > 0) {
+                    countdownNumber.textContent = currentCount;
+                    return;
+                }
+
+                clearInterval(countdownInterval);
+                countdownOverlay.classList.add('hidden');
+                countdownOverlay.setAttribute('aria-hidden', 'true');
+                isCountdownRunning = false;
+                selectWinner();
+
+            }, 1000);
+        }
 
         function selectWinner() {
             const prize = prizeNameInput.value.trim();
@@ -422,7 +457,7 @@
                 
                 winners.forEach((winner, index) => {
                     const winnerElement = document.createElement('div');
-                    winnerElement.className = 'text-lg';
+                    winnerElement.className = 'text-lg winner-name';
                     if (winner.email) {
                         winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name} &lt;${winner.email}&gt;`;
                     } else {

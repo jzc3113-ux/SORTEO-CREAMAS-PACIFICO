@@ -61,6 +61,7 @@
                         Importar participantes
                     </button>
                 </div>
+                <div id="importSuccessMessage" class="import-success-message hidden" role="status" aria-live="polite"></div>
                 <div id="fileError" class="text-red-500 text-sm mt-2 hidden"></div>
             </div>
 
@@ -181,8 +182,24 @@
         const overlayWinnerName = document.getElementById('overlayWinnerName');
         const closeOverlayBtn = document.getElementById('closeOverlayBtn');
         const overlayNewDrawBtn = document.getElementById('overlayNewDrawBtn');
+        const importSuccessMessage = document.getElementById('importSuccessMessage');
 
         let isCountdownRunning = false;
+        let importMessageTimeout = null;
+
+        function showImportSuccessMessage(count) {
+            if (importMessageTimeout) {
+                clearTimeout(importMessageTimeout);
+            }
+
+            importSuccessMessage.textContent = `Se importaron ${count} participantes correctamente`;
+            importSuccessMessage.classList.remove('hidden');
+
+            importMessageTimeout = setTimeout(() => {
+                importSuccessMessage.classList.add('hidden');
+                importMessageTimeout = null;
+            }, 4000);
+        }
 
         // Eventos para el área de arrastrar y soltar
         dropArea.addEventListener('click', () => fileInput.click());
@@ -358,7 +375,7 @@
             if (participants.length === 0) {
                 alert('No se encontraron participantes válidos en el archivo. Verifique que: \n1. La columna de nombres esté correctamente seleccionada \n2. El archivo contenga datos');
             } else {
-                alert(`Se importaron ${participants.length} participantes correctamente`);
+                showImportSuccessMessage(participants.length);
             }
         }
 

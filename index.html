@@ -386,37 +386,56 @@
                 alert(`No hay suficientes participantes (${participants.length}) para seleccionar ${winnerCount} ganadores`);
                 return;
             }
-            
-            // Seleccionar ganadores aleatorios sin repetición
-            winners = [];
-            const participantsCopy = [...participants];
-            
-            for (let i = 0; i < winnerCount; i++) {
-                const randomIndex = Math.floor(Math.random() * participantsCopy.length);
-                winners.push(participantsCopy[randomIndex]);
-                participantsCopy.splice(randomIndex, 1);
-            }
-            
-            // Mostrar ganadores
+
+            drawBtn.disabled = true;
             displayPrize.textContent = prize;
-            winnerList.innerHTML = '';
-            
-            winners.forEach((winner, index) => {
-                const winnerElement = document.createElement('div');
-                winnerElement.className = 'text-lg';
-                if (winner.email) {
-                    winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name} &lt;${winner.email}&gt;`;
-                } else {
-                    winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name}`;
-                }
-                winnerList.appendChild(winnerElement);
-            });
-            
-            // Mostrar contenedor de ganadores
             winnerContainer.style.display = 'block';
-            
-            // Desplazarse hasta los ganadores
-            winnerContainer.scrollIntoView({ behavior: 'smooth' });
+            winnerList.innerHTML = '';
+
+            const rouletteElement = document.createElement('div');
+            rouletteElement.className = 'text-lg font-semibold';
+            winnerList.appendChild(rouletteElement);
+
+            const rouletteDuration = 10000;
+            const rouletteSpeed = 80;
+
+            const rouletteInterval = setInterval(() => {
+                const randomIndex = Math.floor(Math.random() * participants.length);
+                rouletteElement.innerHTML = `🎯 ${participants[randomIndex].name}`;
+            }, rouletteSpeed);
+
+            setTimeout(() => {
+                clearInterval(rouletteInterval);
+
+                // Seleccionar ganadores aleatorios sin repetición
+                winners = [];
+                const participantsCopy = [...participants];
+                
+                for (let i = 0; i < winnerCount; i++) {
+                    const randomIndex = Math.floor(Math.random() * participantsCopy.length);
+                    winners.push(participantsCopy[randomIndex]);
+                    participantsCopy.splice(randomIndex, 1);
+                }
+                
+                // Mostrar ganadores
+                winnerList.innerHTML = '';
+                
+                winners.forEach((winner, index) => {
+                    const winnerElement = document.createElement('div');
+                    winnerElement.className = 'text-lg';
+                    if (winner.email) {
+                        winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name} &lt;${winner.email}&gt;`;
+                    } else {
+                        winnerElement.innerHTML = `<strong>${index + 1}.</strong> ${winner.name}`;
+                    }
+                    winnerList.appendChild(winnerElement);
+                });
+
+                drawBtn.disabled = false;
+                
+                // Desplazarse hasta los ganadores
+                winnerContainer.scrollIntoView({ behavior: 'smooth' });
+            }, rouletteDuration);
         }
 
         // Evento para nuevo sorteo

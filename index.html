@@ -116,13 +116,15 @@
                 </div>
 
                 <div id="winnerContainer" class="space-y-4" style="display: none;">
-                    <div class="bg-gradient-to-r from-green-50 to-blue-50 border-l-4 border-green-500 p-4 rounded-md">
-                        <h3 class="font-semibold mb-2">Premio:</h3>
+                    <div class="bg-gradient-to-r from-green-50 to-blue-50 border-l-4 border-green-500 p-4 rounded-md text-center">
+                        <h3 class="font-semibold mb-2">Veamos a nuestro ganador</h3>
                         <p id="displayPrize" class="text-gray-600"></p>
                     </div>
 
                     <div id="winnerDisplay" class="winner-animation card p-6 text-center">
                         <h3 class="text-lg font-semibold mb-4">¡Ganador(es)!</h3>
+                        <div id="winnerHeroName" class="winner-hero-name"></div>
+                        <p id="winnerCongrats" class="winner-congrats">¡Muchas felicidades!</p>
                         <div id="winnerList" class="space-y-2 text-gray-700">
                             <!-- Aquí se mostrarán los ganadores -->
                         </div>
@@ -146,7 +148,10 @@
     <div id="countdownOverlay" class="countdown-overlay hidden" aria-hidden="true">
         <button id="closeOverlayBtn" class="overlay-close-btn hidden" type="button" aria-label="Cerrar overlay de ganador">×</button>
         <div id="countdownNumber" class="countdown-number">10</div>
+        <div id="overlayNumberTicker" class="overlay-number-ticker hidden" aria-live="polite"></div>
         <div id="overlayWinnerContent" class="overlay-winner-content hidden">
+            <p class="overlay-winner-label">El ganador es</p>
+            <div id="overlayWinnerNumber" class="overlay-winner-number"></div>
             <div id="overlayWinnerName" class="overlay-winner-name"></div>
             <button id="overlayNewDrawBtn" class="btn-primary overlay-new-draw-btn" type="button">Nuevo sorteo</button>
         </div>
@@ -178,14 +183,52 @@
         const winnerCountSelect = document.getElementById('winnerCount');
         const countdownOverlay = document.getElementById('countdownOverlay');
         const countdownNumber = document.getElementById('countdownNumber');
+        const overlayNumberTicker = document.getElementById('overlayNumberTicker');
         const overlayWinnerContent = document.getElementById('overlayWinnerContent');
+        const overlayWinnerNumber = document.getElementById('overlayWinnerNumber');
         const overlayWinnerName = document.getElementById('overlayWinnerName');
+        const winnerHeroName = document.getElementById('winnerHeroName');
+        const winnerCongrats = document.getElementById('winnerCongrats');
         const closeOverlayBtn = document.getElementById('closeOverlayBtn');
         const overlayNewDrawBtn = document.getElementById('overlayNewDrawBtn');
         const importSuccessMessage = document.getElementById('importSuccessMessage');
 
         let isCountdownRunning = false;
         let importMessageTimeout = null;
+        let overlayTickerInterval = null;
+
+        function getRandomParticipantNumber() {
+            if (participants.length === 0) {
+                return 0;
+            }
+            return Math.floor(Math.random() * participants.length) + 1;
+        }
+
+        function startOverlayTicker() {
+            stopOverlayTicker();
+            if (participants.length === 0) {
+                overlayNumberTicker.textContent = '';
+                return;
+            }
+
+            overlayNumberTicker.classList.remove('hidden');
+            overlayNumberTicker.textContent = `N.° ${getRandomParticipantNumber()}`;
+            overlayTickerInterval = setInterval(() => {
+                overlayNumberTicker.textContent = `N.° ${getRandomParticipantNumber()}`;
+            }, 70);
+        }
+
+        function stopOverlayTicker(finalNumber = null) {
+            if (overlayTickerInterval) {
+                clearInterval(overlayTickerInterval);
+                overlayTickerInterval = null;
+            }
+
+            if (finalNumber !== null) {
+                overlayNumberTicker.textContent = `N.° ${finalNumber}`;
+                overlayNumberTicker.classList.remove('hidden');
+            }
+        }
 
         function showImportSuccessMessage(count) {
             if (importMessageTimeout) {
@@ -427,7 +470,9 @@
             countdownNumber.classList.remove('hidden');
             closeOverlayBtn.classList.add('hidden');
             overlayWinnerContent.classList.add('hidden');
+            overlayWinnerNumber.textContent = '';
             overlayWinnerName.textContent = '';
+            startOverlayTicker();
             countdownOverlay.classList.remove('hidden');
             countdownOverlay.setAttribute('aria-hidden', 'false');
 
@@ -481,6 +526,10 @@
             }
 
             // Mostrar ganadores en la tarjeta inferior
+            const heroWinner = winners[0];
+            winnerHeroName.textContent = heroWinner ? heroWinner.name : '';
+            winnerCongrats.style.display = heroWinner ? 'block' : 'none';
+
             winners.forEach((winner, index) => {
                 const winnerElement = document.createElement('div');
                 winnerElement.className = 'text-lg winner-name';
@@ -492,8 +541,13 @@
                 winnerList.appendChild(winnerElement);
             });
 
+            const winnerPosition = participants.findIndex((participant) => participant === heroWinner) + 1;
+            const winnerNumber = winnerPosition > 0 ? winnerPosition : null;
+
             countdownNumber.classList.add('hidden');
-            overlayWinnerName.textContent = winners.map((winner) => winner.name).join(' • ');
+            overlayWinnerNumber.textContent = winnerNumber ? `N.° ${winnerNumber}` : '';
+            overlayWinnerName.textContent = heroWinner ? heroWinner.name : '';
+            stopOverlayTicker(winnerNumber);
             closeOverlayBtn.classList.remove('hidden');
             overlayWinnerContent.classList.remove('hidden');
 
@@ -507,7 +561,10 @@
             countdownNumber.classList.remove('hidden');
             closeOverlayBtn.classList.add('hidden');
             overlayWinnerContent.classList.add('hidden');
+            overlayNumberTicker.classList.add('hidden');
+            overlayWinnerNumber.textContent = '';
             overlayWinnerName.textContent = '';
+            stopOverlayTicker();
             drawBtn.disabled = false;
             isCountdownRunning = false;
         }

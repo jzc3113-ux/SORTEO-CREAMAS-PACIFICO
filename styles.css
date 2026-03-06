@@ -119,3 +119,30 @@ h1,h2,h3,.heading{
   70%{transform: scale(1.05); box-shadow: 0 0 0 10px rgba(74,222,128,0);}
   100%{transform: scale(1); box-shadow: 0 0 0 0 rgba(74,222,128,0);}
 }
+
+
+.countdown-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.countdown-overlay.hidden{
+  display: none;
+}
+
+.countdown-number{
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: clamp(6rem, 24vw, 16rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.winner-name{
+  font-family: 'FF Nort Headline', 'Atkinson Hyperlegible', sans-serif;
+}
